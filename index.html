@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROSA</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI', sans-serif;
+}
+
+body{
+  background:#0b0b0f;
+  color:white;
+}
+
+/* NAV */
+.navbar{
+  position:fixed;
+  top:0;
+  width:100%;
+  padding:15px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  backdrop-filter: blur(10px);
+  background: rgba(0,0,0,0.6);
+  z-index:10;
+}
+
+.logo{
+  color:#ff2e88;
+  font-weight:bold;
+  letter-spacing:2px;
+}
+
+.nav-right input{
+  padding:8px 12px;
+  border:none;
+  border-radius:20px;
+  outline:none;
+  background:#1c1c25;
+  color:white;
+}
+
+/* HERO */
+.hero{
+  height:65vh;
+  background: linear-gradient(to top, #0b0b0f, transparent),
+              url("https://picsum.photos/1200/600") center/cover no-repeat;
+  display:flex;
+  align-items:flex-end;
+  padding:50px;
+}
+
+.hero h2{
+  font-size:45px;
+  color:#ff2e88;
+}
+
+/* ROW */
+.row{
+  margin-top:80px;
+  padding:20px;
+}
+
+.row h3{
+  margin-bottom:10px;
+  color:#ff2e88;
+}
+
+.row-posters{
+  display:flex;
+  overflow-x:auto;
+  gap:10px;
+}
+
+/* CARD */
+.card{
+  min-width:150px;
+  transition:0.3s;
+}
+
+.card img{
+  width:100%;
+  border-radius:10px;
+  box-shadow:0 0 15px rgba(255,46,136,0.3);
+}
+
+.card:hover{
+  transform:scale(1.1);
+}
+
+.card p{
+  text-align:center;
+  margin-top:5px;
+  font-size:14px;
+}
+
+/* SEARCH */
+#results{
+  padding:20px;
+  margin-top:80px;
+  display:none;
+}
+
+.grid{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.grid .card{
+  width:150px;
+  margin:10px;
+}
+
+/* SCROLL BAR */
+::-webkit-scrollbar{
+  height:6px;
+}
+
+::-webkit-scrollbar-thumb{
+  background:#ff2e88;
+  border-radius:10px;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width:768px){
+
+  .navbar{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .nav-right{
+    width:100%;
+    margin-top:10px;
+  }
+
+  .nav-right input{
+    width:100%;
+  }
+
+  .hero{
+    height:40vh;
+    padding:20px;
+  }
+
+  .hero h2{
+    font-size:25px;
+  }
+
+  .card{
+    min-width:110px;
+  }
+
+  .grid .card{
+    width:45%;
+  }
+}
+
+@media (max-width:480px){
+  .hero h2{
+    font-size:20px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<header class="navbar">
+  <h1 class="logo">ROSA</h1>
+  <div class="nav-right">
+    <input type="text" id="search" placeholder="Buscar...">
+  </div>
+</header>
+
+<section class="hero">
+  <h2>Contenido Destacado</h2>
+</section>
+
+<section id="results">
+  <h3>Resultados</h3>
+  <div class="grid" id="resultsGrid"></div>
+</section>
+
+<section class="row">
+  <h3>Populares</h3>
+  <div class="row-posters" id="popular"></div>
+</section>
+
+<section class="row">
+  <h3>Tendencias</h3>
+  <div class="row-posters" id="trending"></div>
+</section>
+
+<script>
+const movies = [
+  {title:"Stranger Things", img:"https://picsum.photos/200/300?1"},
+  {title:"Breaking Bad", img:"https://picsum.photos/200/300?2"},
+  {title:"The Witcher", img:"https://picsum.photos/200/300?3"},
+  {title:"Dark", img:"https://picsum.photos/200/300?4"},
+  {title:"Money Heist", img:"https://picsum.photos/200/300?5"},
+  {title:"Squid Game", img:"https://picsum.photos/200/300?6"},
+  {title:"Wednesday", img:"https://picsum.photos/200/300?7"},
+  {title:"Narcos", img:"https://picsum.photos/200/300?8"},
+];
+
+function render(id, data){
+  const container = document.getElementById(id);
+  container.innerHTML = "";
+  data.forEach(m => {
+    container.innerHTML += `
+      <div class="card">
+        <img src="${m.img}">
+        <p>${m.title}</p>
+      </div>
+    `;
+  });
+}
+
+render("popular", movies);
+render("trending", [...movies].reverse());
+
+const search = document.getElementById("search");
+const results = document.getElementById("results");
+const resultsGrid = document.getElementById("resultsGrid");
+
+search.addEventListener("input", () => {
+  const value = search.value.toLowerCase();
+
+  if(value === ""){
+    results.style.display = "none";
+    return;
+  }
+
+  const filtered = movies.filter(m =>
+    m.title.toLowerCase().includes(value)
+  );
+
+  results.style.display = "block";
+  resultsGrid.innerHTML = "";
+
+  filtered.forEach(m => {
+    resultsGrid.innerHTML += `
+      <div class="card">
+        <img src="${m.img}">
+        <p>${m.title}</p>
+      </div>
+    `;
+  });
+});
+</script>
+
+</body>
+</html>
